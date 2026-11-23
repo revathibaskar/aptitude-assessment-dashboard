@@ -66,3 +66,4 @@ export const testSettingSchema = z.object({
   durationMinutes: z.coerce.number().int().min(1, 'Duration must be at least 1 minute').max(180, 'Duration cannot exceed 180 minutes'),
   passPercentage: z.coerce.number().min(0, 'Pass percentage cannot be negative').max(100, 'Pass percentage cannot exceed 100%'),
 });
+

@@ -9,3 +9,4 @@ export interface AdminPayload {
 export interface AuthenticatedRequest extends Request {
   admin?: AdminPayload;
 }
+

@@ -74,3 +74,4 @@ export class CandidateService {
 }
 
 export const candidateService = new CandidateService();
+

@@ -83,3 +83,4 @@ router.put('/settings', validateRequest(testSettingSchema), (req, res, next) => 
 });
 
 export default router;
+

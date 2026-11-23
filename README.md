@@ -1,12 +1,12 @@
-# EvalPro – Enterprise Aptitude Assessment Dashboard
+# AssessmentPro – Enterprise Aptitude Assessment Dashboard
 
-An enterprise-grade, full-stack recruitment assessment platform engineered for corporate graduate and early-career hiring. EvalPro features a candidate-facing distraction-free test delivery engine with live server-side countdown timers, tamper-proof auto-saving, randomized question sequences, negative marking, and an administrative telemetry suite featuring Recharts analytics, immutable question snapshots, and CSV audit exports with formula injection safeguards.
+An enterprise-grade, full-stack recruitment assessment platform engineered for corporate graduate and early-career hiring. AssessmentPro features a candidate-facing distraction-free test delivery engine with live server-side countdown timers, tamper-proof auto-saving, randomized question sequences, negative marking, and an administrative telemetry suite featuring Recharts analytics, immutable question snapshots, and CSV audit exports with formula injection safeguards.
 
 ---
 
 ## 1. Project Overview
 
-EvalPro was architected to fulfill the Full Stack Developer and AI Specialist assignment requirements. The platform provides:
+AssessmentPro was architected to fulfill the Full Stack Developer and AI Specialist assignment requirements. The platform provides:
 - **Candidate Module:** Registration with validation, interactive instructions with live eligibility checks, single-question delivery, 10-question palette with review indicators, server-enforced countdown timer, negative marking (+2 for correct, -1 for wrong, 0 for unattempted), and instant score reporting.
 - **Admin Module:** JWT + bcrypt authenticated portal, executive dashboard with Recharts visualizations (score distributions and pass/fail ratios), question bank management with active question constraints (strictly 10 active questions across Quantitative, Logical Reasoning, and Verbal domains), candidate result audit logs with immutable question snapshots, CSV data exports, and configurable assessment settings (duration and pass percentage).
 
@@ -379,3 +379,4 @@ The schema is defined in `backend/prisma/schema.prisma` with the following entit
 4. Configure Environment Variables:
    - `NEXT_PUBLIC_API_URL`: Your deployed Render backend URL (e.g., `https://your-api.onrender.com/api`).
 5. Click **Deploy**.
+

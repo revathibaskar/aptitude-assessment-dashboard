@@ -70,7 +70,7 @@ export default function AdminLoginPage() {
             <Award className="w-6 h-6" />
           </div>
           <span className="font-black text-2xl text-white tracking-tight">
-            Eval<span className="text-indigo-400">Pro</span>
+            Assessment<span className="text-indigo-400">Pro</span>
           </span>
         </Link>
         <h2 className="text-2xl font-black text-white tracking-tight">
@@ -179,3 +179,4 @@ export default function AdminLoginPage() {
     </div>
   );
 }
+

@@ -17,3 +17,4 @@ export class CandidateController {
 }
 
 export const candidateController = new CandidateController();
+

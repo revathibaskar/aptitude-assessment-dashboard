@@ -12,3 +12,4 @@ router.use('/results', resultRoutes);
 router.use('/admin', adminRoutes);
 
 export default router;
+

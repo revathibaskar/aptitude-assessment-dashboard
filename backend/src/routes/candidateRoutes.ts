@@ -10,3 +10,4 @@ router.post('/register', validateRequest(candidateRegisterSchema), (req, res, ne
 });
 
 export default router;
+

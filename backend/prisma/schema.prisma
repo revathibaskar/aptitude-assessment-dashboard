@@ -150,3 +150,4 @@ model AttemptQuestion {
   @@index([attemptId])
   @@map("attempt_questions")
 }
+

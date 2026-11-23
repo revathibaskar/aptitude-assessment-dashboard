@@ -92,7 +92,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           </div>
           <div>
             <span className="font-extrabold text-base tracking-tight text-white">
-              Eval<span className="text-indigo-400">Pro</span>
+              Assessment<span className="text-indigo-400">Pro</span>
             </span>
             <span className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
               Admin Suite
@@ -155,7 +155,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             <Award className="w-4 h-4" />
           </div>
           <span className="font-extrabold text-base tracking-tight text-white">
-            Eval<span className="text-indigo-400">Pro</span> Admin
+            Assessment<span className="text-indigo-400">Pro</span> Admin
           </span>
         </div>
 
@@ -205,3 +205,4 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     </div>
   );
 }
+

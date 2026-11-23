@@ -133,9 +133,10 @@ export default function HomePage() {
 
       <footer className="border-t border-slate-200 bg-white py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500">
-          EvalPro Aptitude Assessment Dashboard • Full Stack Developer & AI Specialist Assignment
+          AssessmentPro Aptitude Assessment Dashboard • Full Stack Developer & AI Specialist Assignment
         </div>
       </footer>
     </div>
   );
 }
+

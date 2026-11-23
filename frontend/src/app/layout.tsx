@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'EvalPro – Corporate Aptitude Assessment Dashboard',
+  title: 'AssessmentPro – Corporate Aptitude Assessment Dashboard',
   description: 'Enterprise recruitment and candidate aptitude evaluation platform',
 };
 
@@ -19,3 +19,4 @@ export default function RootLayout({
     </html>
   );
 }
+

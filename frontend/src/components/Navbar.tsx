@@ -12,7 +12,7 @@ export function Navbar() {
           </div>
           <div>
             <span className="font-extrabold text-lg tracking-tight text-slate-900">
-              Eval<span className="text-indigo-600">Pro</span>
+              Assessment<span className="text-indigo-600">Pro</span>
             </span>
             <span className="hidden sm:inline-block ml-2 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-slate-100 text-slate-600 rounded">
               Aptitude Engine
@@ -39,3 +39,4 @@ export function Navbar() {
     </header>
   );
 }
+
