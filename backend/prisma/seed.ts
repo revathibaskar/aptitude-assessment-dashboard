@@ -1,5 +1,24 @@
-import { PrismaClient, QuestionCategory, QuestionDifficulty, OptionType } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+
+const QuestionCategory = {
+  QUANTITATIVE: 'QUANTITATIVE',
+  LOGICAL_REASONING: 'LOGICAL_REASONING',
+  VERBAL: 'VERBAL',
+} as const;
+
+const QuestionDifficulty = {
+  EASY: 'EASY',
+  MEDIUM: 'MEDIUM',
+  HARD: 'HARD',
+} as const;
+
+const OptionType = {
+  A: 'A',
+  B: 'B',
+  C: 'C',
+  D: 'D',
+} as const;
 
 const prisma = new PrismaClient();
 
