@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CandidateStatus {
+  REGISTERED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum AttemptStatus {
+  IN_PROGRESS
+  COMPLETED
+  TIMED_OUT
+}
+
+enum OptionType {
+  A
+  B
+  C
+  D
+}
+
+enum QuestionCategory {
+  QUANTITATIVE
+  LOGICAL_REASONING
+  VERBAL
+}
+
+enum QuestionDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model Admin {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("admins")
+}
+
+model Candidate {
+  id                   String          @id @default(uuid())
+  fullName             String
+  email                String          @unique
+  age                  Int
+  phoneNumber          String
+  gender               String?
+  highestQualification String
+  city                 String?
+  status               CandidateStatus @default(REGISTERED)
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  attempts             TestAttempt[]
+
+  @@index([email])
+  @@map("candidates")
+}
+
+model Question {
+  id               String            @id @default(uuid())
+  text             String
+  optionA          String
+  optionB          String
+  optionC          String
+  optionD          String
+  correctOption    OptionType
+  category         QuestionCategory
+  difficulty       QuestionDifficulty
+  explanation      String?
+  isActive         Boolean           @default(true)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  attemptQuestions AttemptQuestion[]
+
+  @@index([isActive, category])
+  @@map("questions")
+}
+
+model TestSetting {
+  id              String   @id @default(uuid())
+  durationMinutes Int      @default(15)
+  passPercentage  Float    @default(60.0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("test_settings")
+}
+
+model TestAttempt {
+  id               String            @id @default(uuid())
+  candidateId      String
+  candidate        Candidate         @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  status           AttemptStatus     @default(IN_PROGRESS)
+  startedAt        DateTime          @default(now())
+  deadlineAt       DateTime
+  completedAt      DateTime?
+  durationMinutes  Int
+  passPercentage   Float
+  totalScore       Float?
+  percentage       Float?
+  correctCount     Int?
+  incorrectCount   Int?
+  unattemptedCount Int?
+  marksDeducted    Float?
+  isPassed         Boolean?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  attemptQuestions AttemptQuestion[]
+
+  @@index([candidateId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("test_attempts")
+}
+
+model AttemptQuestion {
+  id                String             @id @default(uuid())
+  attemptId         String
+  attempt           TestAttempt        @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId        String?
+  question          Question?          @relation(fields: [questionId], references: [id], onDelete: SetNull)
+  orderIndex        Int
+  questionText      String
+  optionA           String
+  optionB           String
+  optionC           String
+  optionD           String
+  correctOption     OptionType
+  category          QuestionCategory
+  difficulty        QuestionDifficulty
+  explanation       String?
+  selectedOption    OptionType?
+  isMarkedForReview Boolean            @default(false)
+  answeredAt        DateTime?
+  isCorrect         Boolean?
+  marksAwarded      Float?
+
+  @@unique([attemptId, orderIndex])
+  @@index([attemptId])
+  @@map("attempt_questions")
+}
