@@ -85,8 +85,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col lg:flex-row">
       {/* Sidebar for Desktop */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-slate-900 text-slate-200 border-r border-slate-800 shrink-0">
-        <div className="h-16 flex items-center px-6 border-b border-slate-800 gap-3">
+      <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-slate-900 text-slate-200 border-r border-slate-800 shrink-0 sticky top-0 h-screen">
+        <div className="h-16 flex items-center px-6 border-b border-slate-800 gap-3 shrink-0">
           <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-900">
             <Award className="w-5 h-5" />
           </div>
@@ -123,8 +123,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           })}
         </div>
 
-        {/* Admin Profile & Logout */}
-        <div className="p-4 border-t border-slate-800 bg-slate-950/50">
+        {/* Admin Profile & Logout - Always pinned at bottom */}
+        <div className="p-4 border-t border-slate-800 bg-slate-950/60 shrink-0">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2.5 overflow-hidden">
               <div className="w-8 h-8 rounded-full bg-slate-800 text-indigo-400 flex items-center justify-center font-bold text-xs shrink-0 border border-slate-700">
