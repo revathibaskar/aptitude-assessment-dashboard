@@ -4,60 +4,42 @@ An enterprise-grade, full-stack recruitment assessment platform engineered for c
 
 ---
 
-## 1. Project Overview
+## 1. Quick Reference & Demo Credentials
 
-AssessmentPro was architected to fulfill the Full Stack Developer and AI Specialist assignment requirements. The platform provides:
-- **Candidate Module:** Registration with validation, interactive instructions with live eligibility checks, single-question delivery, 10-question palette with review indicators, server-enforced countdown timer, negative marking (+2 for correct, -1 for wrong, 0 for unattempted), and instant score reporting.
-- **Admin Module:** JWT + bcrypt authenticated portal, executive dashboard with Recharts visualizations (score distributions and pass/fail ratios), question bank management with active question constraints (strictly 10 active questions across Quantitative, Logical Reasoning, and Verbal domains), candidate result audit logs with immutable question snapshots, CSV data exports, and configurable assessment settings (duration and pass percentage).
+| Role | Access URL | Credentials |
+| :--- | :--- | :--- |
+| **Candidate Portal** | `/register` | Any valid name, email, 10-digit phone number, age 18–60 |
+| **Admin Portal** | `/admin/login` | **Email:** `admin@assessment.com`<br/>**Password:** `Admin@123456` |
+
+> *An **Auto-Fill Demo Credentials** button is provided on `/admin/login` for instant evaluator access.*
 
 ---
 
 ## 2. Technology Stack
 
-### Frontend Application (`frontend/`)
-- **Framework:** Next.js 14 (App Router, Server & Client Components)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS with custom corporate design system
-- **UI Components:** Modular accessible components inspired by shadcn/ui
-- **Icons:** Lucide React
-- **Data Visualization:** Recharts (BarChart, PieChart, ResponsiveContainer)
-- **Data Fetching:** Axios with HTTP-only cookie support and request/response interceptors
-- **Form Management & Validation:** React Hook Form with Zod schema resolvers
-
-### Backend Application (`backend/`)
-- **Runtime & Framework:** Node.js, Express.js
-- **Language:** TypeScript
-- **Database & ORM:** PostgreSQL, Prisma ORM
-- **Security:** Helmet, CORS (with origin white-listing and credentials), express-rate-limit, cookie-parser
-- **Authentication:** JSON Web Tokens (JWT) stored in HTTP-only secure cookies with fallback Authorization header support, bcryptjs password hashing (10 salt rounds)
-- **Input Validation:** Zod schemas applied via centralized Express middleware
-
-### Cloud & Database Hosting
-- **Frontend Hosting:** Vercel
-- **Backend Hosting:** Render
-- **Database:** Neon Serverless PostgreSQL (or local PostgreSQL)
-- **Repository:** GitHub monorepo structure
+- **Frontend:** Next.js 14 (App Router), TypeScript, Tailwind CSS, shadcn/ui-inspired components, Lucide React, Recharts, Axios, React Hook Form, Zod.
+- **Backend:** Node.js, Express.js, TypeScript, Prisma ORM, PostgreSQL (Neon Serverless), JWT authentication, bcryptjs (10 salt rounds), Helmet security headers, CORS with credentials, express-rate-limit, Zod API validation.
+- **Hosting Targets:** Vercel (Frontend), Render (Backend), Neon (PostgreSQL Database), GitHub Monorepo.
 
 ---
 
-## 3. Folder Structure
+## 3. Project Structure (Monorepo)
 
 ```text
 aptitude-assessment-dashboard/
 │
-├── frontend/
+├── frontend/                              # Next.js 14 App Router application
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── admin/
-│   │   │   │   ├── candidates/
-│   │   │   │   │   ├── [id]/page.tsx      # Candidate detail & audit log
-│   │   │   │   │   └── page.tsx           # Search, filter, sort, pagination, CSV export
-│   │   │   │   ├── dashboard/page.tsx     # Executive metrics & Recharts graphs
-│   │   │   │   ├── login/page.tsx         # Admin authentication with demo credentials
-│   │   │   │   ├── questions/page.tsx     # Question bank CRUD & active constraints
-│   │   │   │   └── settings/page.tsx      # Test duration & pass percentage settings
-│   │   │   ├── instructions/page.tsx      # Assessment instructions & eligibility check
-│   │   │   ├── register/page.tsx          # Candidate registration with inline validation
+│   │   │   │   ├── candidates/            # Candidate list, search, filter, CSV export
+│   │   │   │   │   └── [id]/page.tsx      # Immutable question response audit view
+│   │   │   │   ├── dashboard/page.tsx     # Recharts analytics & summary telemetry
+│   │   │   │   ├── login/page.tsx         # Admin login with auto-fill helper
+│   │   │   │   ├── questions/page.tsx     # Question bank CRUD & 10 active rules
+│   │   │   │   └── settings/page.tsx      # Configurable duration & pass percentage
+│   │   │   ├── instructions/page.tsx      # Real-time eligibility check & rules
+│   │   │   ├── register/page.tsx          # Candidate verification with inline Zod validation
 │   │   │   ├── result/[attemptId]/page.tsx# Scorecard report (+2 / -1 scoring & pass/fail)
 │   │   │   ├── test/[attemptId]/page.tsx  # Timed assessment engine & answer persistence
 │   │   │   ├── globals.css                # Corporate Tailwind design theme
@@ -65,318 +47,222 @@ aptitude-assessment-dashboard/
 │   │   │   └── page.tsx                   # Enterprise landing page
 │   │   ├── components/
 │   │   │   ├── ui/                        # Button, Input, Select, Card, Modal, Badge
-│   │   │   ├── AdminLayout.tsx            # Protected admin layout with sidebar
-│   │   │   └── Navbar.tsx                 # Responsive header
+│   │   │   ├── AdminLayout.tsx            # Protected sticky sidebar admin layout
+│   │   │   └── Navbar.tsx                 # Responsive branding header
 │   │   └── lib/
-│   │       ├── api.ts                     # Axios client with credentials & interceptors
-│   │       ├── types.ts                   # Shared TypeScript interfaces
-│   │       └── utils.ts                   # Formatting and CSS class merge utilities
+│   │       ├── api.ts                     # Axios client with auto /api normalization
+│   │       ├── types.ts                   # Shared TypeScript definitions
+│   │       └── utils.ts                   # Formatting & Tailwind class merging
 │   ├── .env.example
-│   ├── next.config.mjs
 │   ├── package.json
-│   ├── tailwind.config.ts
 │   └── tsconfig.json
 │
-├── backend/
+├── backend/                               # Express.js REST API with Prisma ORM
 │   ├── prisma/
 │   │   ├── migrations/                    # Versioned database migrations
 │   │   ├── schema.prisma                  # Relational database models & enums
-│   │   └── seed.ts                        # Admin, settings, and 10 corporate questions
+│   │   ├── seed.ts                        # Seed: Admin, default settings, 10 corporate questions
+│   │   └── tsconfig.json                  # Isolated TypeScript config for Prisma tooling
 │   ├── src/
-│   │   ├── config/                        # Database singleton & environment variables
+│   │   ├── config/                        # Prisma singleton & environment config
 │   │   ├── controllers/                   # Candidate, Assessment, and Admin controllers
-│   │   ├── middleware/                    # Auth, Zod validation, error handling
+│   │   ├── middleware/                    # Auth (JWT/cookie), Zod validation, error handler
 │   │   ├── routes/                        # REST endpoint routers
-│   │   ├── services/                      # Core business logic & scoring algorithms
-│   │   ├── types/                         # Express & JWT types
+│   │   ├── services/                      # Business logic, scoring, and CSV streaming
+│   │   ├── types/                         # Express & JWT interfaces
 │   │   ├── validators/                    # Zod input schemas
-│   │   └── index.ts                       # Express application entrypoint
+│   │   └── index.ts                       # Express server entrypoint
 │   ├── .env.example
 │   ├── package.json
 │   └── tsconfig.json
 │
 ├── package.json                           # Root monorepo workspace scripts
 ├── .gitignore
-└── README.md                              # Technical documentation
+└── README.md
 ```
 
 ---
 
-## 4. Key Features
+## 4. Setup and Run Steps
 
-### Candidate Assessment Flow
-1. **Validation & Verification:**
-   - Full Name (letters and spaces only, 2–50 characters).
-   - Email ID (strict format, one attempt limit).
-   - Age (18–60 years).
-   - Phone Number (exactly 10 digits).
-   - Gender, Highest Qualification dropdown, and City.
-   - Prevents duplicate assessment attempts gracefully with links to view prior results.
-2. **Eligibility & Instructions:**
-   - Real-time check verifying that exactly 10 active questions exist in the database with balanced categories before permitting test initialization.
-   - Transparent marking scheme (+2 for correct, -1 for incorrect, 0 for unattempted).
-3. **Timed Test Engine:**
-   - Single-question focus with seamless Previous/Next navigation.
-   - Interactive 1–10 palette with distinct indicators: Answered (Emerald), Unanswered (Slate), Marked for Review (Amber), and Current Question (Indigo ring).
-   - Server-enforced countdown timer that auto-submits when time reaches 00:00.
-   - Live backend synchronization upon option selection.
-   - Accidental refresh recovery: questions, answers, and remaining time are preserved.
-   - Shuffled question order personalized for each candidate.
-   - Tamper-proof security: correct options and explanations are never sent to the browser before submission.
-4. **Scoring & Performance Report:**
-   - Raw Score = `(Correct × 2) - (Incorrect × 1)`.
-   - Percentage = `(Net Score / 20) × 100` (Negative net scores and percentages supported).
-   - Dynamic Pass/Fail status based on administrative pass percentage benchmark.
-   - Printable candidate scorecard.
+### Prerequisites
+- **Node.js:** v18+ (tested on Node v20/v22)
+- **npm:** v9+
+- **PostgreSQL:** Local PostgreSQL 14+ instance OR a free cloud instance from [Neon](https://console.neon.tech).
 
-### Administrative Command Center
-1. **Secure Admin Authentication:**
-   - Email and password verification against bcrypt hashes.
-   - Signed JSON Web Tokens (JWT) stored in HTTP-only secure cookies with rate limiting on login attempts.
-2. **Executive Telemetry Dashboard:**
-   - Total Candidates, Tests Completed, Average Score, Pass Rate, and Highest Score cards.
-   - Recharts Score Distribution Bar Chart and Pass/Fail Donut Chart.
-   - Real-time database telemetry without hardcoded mocks.
-3. **Question Bank Management:**
-   - Full CRUD: Add, edit, delete, activate, and deactivate questions.
-   - Hard business rule enforcement: Strictly 10 active questions required (cannot exceed 10 active questions; cannot start tests with fewer than 10).
-   - Category distribution rule (at least 3 questions in Quantitative, Logical Reasoning, and Verbal).
-   - Question snapshots ensure historical tests remain immutable even if questions are later modified or removed.
-4. **Candidate Records & CSV Auditing:**
-   - Real-time search by candidate name or email.
-   - Filtering by Pass/Fail status.
-   - Sorting by score, date of attempt, or name.
-   - Server-side pagination (10 records per page).
-   - Candidate detail view with question-by-question response breakdown.
-   - CSV export protected against CSV formula injection (`=`, `+`, `-`, `@`, `\t`, `\r`).
-5. **Configurable Settings:**
-   - Dynamic update of test duration (minutes) and pass percentage.
-   - Employs snapshotting so existing attempts preserve their historical settings.
-
----
-
-## 5. Frontend Setup Instructions
-
+### Step 1: Clone Repository
 ```bash
-# Navigate to the frontend directory
-cd frontend
-
-# Install dependencies
-npm install
-
-# Configure environment variables
-cp .env.example .env.local
-
-# Run development server
-npm run dev
-# The frontend will be available at http://localhost:3000 (or http://localhost:3001)
-
-# Build for production
-npm run build
-npm run start
+git clone https://github.com/revathibaskar/aptitude-assessment-dashboard.git
+cd aptitude-assessment-dashboard
 ```
 
----
-
-## 6. Backend Setup Instructions
-
+### Step 2: Backend Setup
 ```bash
-# Navigate to the backend directory
+# Navigate to backend directory
 cd backend
 
 # Install dependencies
 npm install
 
-# Configure environment variables
+# Setup environment variables
 cp .env.example .env
+# Edit .env and set your DATABASE_URL and JWT_SECRET (see Environment Variables section below)
 
-# Run Prisma migration & seed
+# Run Prisma migration to create database tables
 npm run prisma:generate
 npm run prisma:migrate
+
+# Seed the database (creates admin@assessment.com, settings, and 10 corporate questions)
 npm run prisma:seed
 
-# Run development server
+# Start backend development server
 npm run dev
-# The backend will be available at http://localhost:5001
+# Backend runs on http://localhost:5001
+```
+
+### Step 3: Frontend Setup
+```bash
+# In a new terminal, navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Setup environment variables
+cp .env.example .env.local
+# Default NEXT_PUBLIC_API_URL is http://localhost:5001/api
+
+# Start frontend development server
+npm run dev
+# Frontend runs on http://localhost:3000 (or http://localhost:3001)
 ```
 
 ---
 
-## 7. Environment Variables
+## 5. Environment Variables
 
 ### Backend (`backend/.env`)
-```env
-PORT=5001
-NODE_ENV=development
-DATABASE_URL="postgresql://username:password@localhost:5432/aptitude_assessment?schema=public"
-JWT_SECRET="super-secret-jwt-key-change-in-production-random32chars"
-FRONTEND_URL="http://localhost:3000"
-```
+
+| Variable | Description | Example Value |
+| :--- | :--- | :--- |
+| `PORT` | Port for Express server | `5001` |
+| `NODE_ENV` | Runtime environment | `development` (or `production`) |
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@localhost:5432/aptitude_assessment?schema=public` |
+| `JWT_SECRET` | 32+ character key for JWT token signing | `a81a24634173b57febd4e43e54eac982ad10e39902d3b0db67ee296a0b377a48` |
+| `FRONTEND_URL` | Client origin URL for CORS whitelist | `http://localhost:3000` (or `https://your-app.vercel.app`) |
 
 ### Frontend (`frontend/.env.local`)
-```env
-NEXT_PUBLIC_API_URL="http://localhost:5001/api"
-```
+
+| Variable | Description | Example Value |
+| :--- | :--- | :--- |
+| `NEXT_PUBLIC_API_URL` | Backend REST API base URL | `http://localhost:5001/api` (or `https://your-backend.onrender.com/api`) |
 
 ---
 
-## 8. Neon PostgreSQL Configuration
-
-To deploy using Neon Serverless PostgreSQL:
-1. Log in to [Neon Console](https://console.neon.tech) and create a project (e.g., `aptitude-assessment`).
-2. Copy the pooled connection string provided in the Neon dashboard:
-   ```text
-   postgresql://[user]:[password]@[endpoint].neon.tech/neondb?sslmode=require
-   ```
-3. Set `DATABASE_URL` in `backend/.env` (and in Render environment variables) to this connection string.
-4. Run `npm run prisma:deploy` to apply the migrations to your Neon database.
-
----
-
-## 9. Prisma Migration Commands
-
-```bash
-# Inside backend/
-# Generate Prisma Client
-npx prisma generate
-
-# Create and apply migrations in development
-npx prisma migrate dev --name init
-
-# Deploy migrations to production (Neon/Render)
-npx prisma migrate deploy
-
-# Open Prisma Studio GUI
-npx prisma studio
-```
-
----
-
-## 10. Database Seed Commands
-
-```bash
-# Inside backend/
-npm run prisma:seed
-```
-This script creates:
-1. Default Admin Account (`admin@assessment.com`).
-2. Default Test Settings (15 minutes duration, 60% pass percentage).
-3. 10 Verified Corporate Aptitude Questions across Quantitative, Logical Reasoning, and Verbal reasoning.
-
----
-
-## 11. Admin Demo Credentials
+## 6. Admin Credentials
 
 | Role | Email | Password |
 | :--- | :--- | :--- |
-| **Platform Administrator** | `admin@assessment.com` | `Admin@123456` |
+| **System Administrator** | `admin@assessment.com` | `Admin@123456` |
 
-*An Auto-Fill helper button is provided on the admin login page (`/admin/login`) for convenience.*
+- Passwords are encrypted with **bcrypt** (10 salt rounds). Plaintext passwords are never stored.
+- JWT tokens are issued upon authentication and persisted in **HTTP-only secure cookies** (`token`), with bearer header support.
+- Rate limiter active: Maximum 15 login attempts per 15-minute window.
 
 ---
 
-## 12. Database Schema Explanation
+## 7. Database Schema Explanation
 
-The schema is defined in `backend/prisma/schema.prisma` with the following entities:
+Defined in `backend/prisma/schema.prisma` with relational integrity:
+
+```mermaid
+erDiagram
+    Candidate ||--o{ TestAttempt : "takes"
+    TestAttempt ||--|{ AttemptQuestion : "contains snapshots"
+    Question ||--o{ AttemptQuestion : "referenced by"
+    Admin ||--o{ Admin : "authenticates"
+    TestSetting ||--o{ TestSetting : "configures"
+```
 
 1. **`Admin` (`admins` table):**
    - Stores administrator credentials with `passwordHash` (bcrypt) and unique email index.
 2. **`Candidate` (`candidates` table):**
-   - Stores candidate profile: `fullName`, unique `email`, `age`, `phoneNumber`, `gender`, `highestQualification`, `city`, and lifecycle `status` (`REGISTERED`, `IN_PROGRESS`, `COMPLETED`).
+   - Profile: `fullName`, unique `email`, `age`, `phoneNumber`, `gender`, `highestQualification`, `city`, and lifecycle `status` (`REGISTERED`, `IN_PROGRESS`, `COMPLETED`).
+   - Prevents duplicate assessment attempts.
 3. **`Question` (`questions` table):**
-   - Master bank of questions: `text`, `optionA`, `optionB`, `optionC`, `optionD`, `correctOption` (A/B/C/D), `category` (QUANTITATIVE, LOGICAL_REASONING, VERBAL), `difficulty` (EASY, MEDIUM, HARD), `explanation`, and `isActive` flag.
+   - Master question bank: `text`, `optionA`, `optionB`, `optionC`, `optionD`, `correctOption` (A/B/C/D), `category` (QUANTITATIVE, LOGICAL_REASONING, VERBAL), `difficulty` (EASY, MEDIUM, HARD), `explanation`, and `isActive` boolean.
 4. **`TestSetting` (`test_settings` table):**
-   - Configurable test configuration: `durationMinutes` (default 15) and `passPercentage` (default 60.0).
+   - Platform configurations: `durationMinutes` (default 15) and `passPercentage` (default 60.0).
 5. **`TestAttempt` (`test_attempts` table):**
-   - Individual test session record: foreign key to `candidateId`, `startedAt`, server-enforced `deadlineAt`, `completedAt`, snapshots of `durationMinutes` and `passPercentage`, and calculated fields: `totalScore`, `percentage`, `correctCount`, `incorrectCount`, `unattemptedCount`, `marksDeducted`, and `isPassed`.
+   - Session record: `candidateId`, `startedAt`, server-enforced `deadlineAt`, `completedAt`, immutable snapshots of `durationMinutes` and `passPercentage`, and calculated metrics: `totalScore`, `percentage`, `correctCount`, `incorrectCount`, `unattemptedCount`, `marksDeducted`, and `isPassed`.
 6. **`AttemptQuestion` (`attempt_questions` table):**
-   - Immutable snapshot of question content for a specific test attempt, storing `orderIndex` (1–10 shuffled order), full question text and options snapshots, candidate's `selectedOption`, `isMarkedForReview`, `isCorrect`, and `marksAwarded`.
+   - **Immutable Question Snapshot:** Stores exact copy of question text, options A–D, correct answer, category, and explanation at the time the candidate started the test.
+   - Candidate response: `selectedOption`, `isMarkedForReview`, `answeredAt`, `isCorrect`, and `marksAwarded` (+2.0, -1.0, or 0.0).
+   - **Crucial Architecture:** If questions are later edited or deleted from the Question Bank, past attempts remain 100% historically intact.
 
 ---
 
-## 13. API Endpoint Documentation
+## 8. AI Tool(s) Used and Key Prompts
 
-### Candidate & Assessment Endpoints
+### AI Tools Utilized:
+- **Google Antigravity AI (Google DeepMind):** Used as lead architect and QA engineer for end-to-end full-stack implementation, Prisma schema modeling, optimistic state synchronization, sticky responsive UI architecture, and defense-in-depth security.
+- **Gemini 3.8 / Claude 3.5 Sonnet:** Used for drafting original, mathematically sound graduate-level corporate aptitude questions, proving unique defensible answers, and modeling realistic distractors.
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/candidates/register` | Validates and registers a new candidate. Prevents duplicate attempts. |
-| `GET` | `/api/assessments/instructions` | Returns duration, marking scheme, and eligibility (`canStart`). |
-| `POST` | `/api/assessments/start` | Initializes attempt, shuffles questions, and creates snapshot. |
-| `GET` | `/api/assessments/:attemptId` | Returns current test state. Omits correct answers & explanations. |
-| `PUT` | `/api/assessments/:attemptId/answers` | Saves candidate's selected answer in real-time. |
-| `POST` | `/api/assessments/:attemptId/mark-review` | Toggles marked-for-review flag on a question. |
-| `POST` | `/api/assessments/:attemptId/submit` | Calculates score server-side and locks the attempt. |
-| `GET` | `/api/results/:attemptId` | Retrieves final verified score summary and breakdown. |
+### Key Prompts Employed:
 
-### Admin Endpoints (Protected by JWT)
+1. **Full-Stack Architecture & Monorepo Prompt:**
+   > *"Act as a senior full-stack developer, UI/UX designer, database architect and QA engineer. Build an enterprise corporate aptitude assessment dashboard in a monorepo (frontend Next.js App Router, backend Express Prisma PostgreSQL). Implement candidate registration with validation, 10-question timed test engine with +2/-1/0 marking, tamper-proof question snapshots, and an admin command center with Recharts, CSV export, and settings."*
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/admin/login` | Authenticates administrator; issues HTTP-only JWT cookie. |
-| `POST` | `/api/admin/logout` | Clears authentication session cookie. |
-| `GET` | `/api/admin/me` | Validates session token and returns current admin profile. |
-| `GET` | `/api/admin/dashboard` | Returns summary statistics and Recharts distribution data. |
-| `GET` | `/api/admin/questions` | Lists all questions with category and active filters. |
-| `POST` | `/api/admin/questions` | Adds question; enforces strictly 10 active questions rule. |
-| `PUT` | `/api/admin/questions/:id` | Updates question details or toggles active status. |
-| `DELETE` | `/api/admin/questions/:id` | Deletes question safely without corrupting past snapshots. |
-| `GET` | `/api/admin/candidates` | Paginated candidate list with search, status filters, and sorting. |
-| `GET` | `/api/admin/candidates/:id` | Full candidate audit report with question-by-question breakdown. |
-| `GET` | `/api/admin/results/export` | Generates RFC 4180 CSV export with formula injection escaping. |
-| `GET` | `/api/admin/settings` | Returns current assessment duration and pass percentage. |
-| `PUT` | `/api/admin/settings` | Updates global duration and pass percentage settings. |
+2. **Immutable Snapshot & Business Rule Prompt:**
+   > *"Design a Prisma schema and backend service that enforces: 1) Exactly 10 active questions must be available to start a test with at least 3 in Quantitative, 3 in Logical Reasoning, and 3 in Verbal; 2) Candidate attempts must store an immutable snapshot of question text, options, and settings so deleting or editing questions in the master bank never mutates past candidate results."*
+
+3. **Corporate Aptitude Question Creation & Verification Prompt:**
+   > *"Formulate seven original, graduate-level corporate aptitude questions across Quantitative (percentages, break-even, profit margins), Logical Reasoning (arrangements, assumptions, deductive logic), and Verbal (parallelism, precision, subject-verb agreement) with multi-step reasoning, exactly one defensible correct answer, common calculation error distractors, and a full mathematical/logical proof."*
+
+4. **Security & CSV Injection Defense Prompt:**
+   > *"Implement defense-in-depth protection against CSV formula injection (`=`, `+`, `-`, `@`, `\t`, `\r`) when streaming filtered candidate results to RFC 4180 CSV, and ensure correct options and explanations are never sent to candidate browsers prior to submission."*
 
 ---
 
-## 14. AI Coding Tools Used
+## 9. Assumptions and Limitations
 
-- **Antigravity AI (Google DeepMind):** Used for end-to-end full-stack systems engineering, Prisma relational modeling, test engine architecture, and defensive validation design.
-- **Claude / Gemini 3.8:** Used for designing original, rigorous corporate aptitude test problems with multi-step reasoning, mathematical verification, and distractor modeling.
-
----
-
-## 15. Key AI Prompts Used
-
-- *"Act as a senior full-stack developer, UI/UX designer, database architect and QA engineer to build an enterprise corporate aptitude assessment dashboard in a TypeScript monorepo with Next.js App Router and Express Prisma PostgreSQL."*
-- *"Formulate seven original, graduate-level corporate aptitude questions across Quantitative (percentages, break-even, ratios), Logical Reasoning (arrangements, assumptions, deductive logic), and Verbal (parallelism, precision, subject-verb agreement) with multi-step proofs and plausible distractors."*
-- *"Architect a tamper-proof question snapshot model in Prisma so that editing or deleting questions in Question Management never mutates past candidate results or audits."*
-- *"Implement defense-in-depth protection against CSV formula injection (`=`, `+`, `-`, `@`, `\t`, `\r`) when streaming filtered candidate results."*
+1. **One Attempt Per Email:** Each candidate email address is restricted to a single test session. If an email has an active `IN_PROGRESS` attempt, they are allowed to resume their session; if already `COMPLETED`, further attempts are blocked and they can view their completed scorecard.
+2. **Strict Active Question Requirement:** An assessment can only be initiated when exactly 10 questions are marked active in the database and include at least 3 questions in each of the three core categories (Quantitative, Logical Reasoning, and Verbal).
+3. **Negative Marking & Scoring Formula:**
+   - Raw Score = `(Correct × 2) - (Incorrect × 1)`. Maximum possible raw score = 20.
+   - Percentage = `(Net Score / 20) × 100`.
+   - Negative net scores and percentages are fully supported (e.g., 0 correct and 10 wrong yields -10 / 20 = -50%).
+4. **Time Zone Standard:** All timestamps (`startedAt`, `deadlineAt`, `completedAt`) are calculated in UTC on the backend and rendered localized in candidate and admin browsers.
 
 ---
 
-## 16. Assumptions and Limitations
+## 10. Deployment Guide (Vercel & Render)
 
-1. **One Attempt Per Email:** Each candidate email address is restricted to a single test session. If an attempt is currently `IN_PROGRESS`, the candidate is redirected to resume their active session.
-2. **Strict Active Question Requirement:** An assessment can only be initiated when exactly 10 questions are marked active in the database and have at least 3 questions in each of the three core categories.
-3. **Negative Marking:** Net scores can fall below zero (e.g., 0 correct and 10 incorrect yields -10 / 20 = -50%). Both raw score and percentage calculations allow negative values as specified.
-4. **Time Zone Standard:** All database timestamps (`startedAt`, `deadlineAt`, `completedAt`) are stored in UTC ISO 8601 format and rendered in the candidate's localized time.
-
----
-
-## 17. Deployment Instructions (Vercel & Render)
-
-### Backend Deployment (Render)
-1. Push your repository to GitHub.
-2. Log in to [Render](https://render.com) and create a **Web Service**.
-3. Select your repository and specify:
-   - **Root Directory:** `backend`
+### Backend Deployment on Render:
+1. Create a **Web Service** on [Render](https://dashboard.render.com).
+2. Connect your GitHub repository.
+3. Configure settings:
+   - **Root Directory:** `backend` ⚠️ *(Crucial)*
    - **Environment:** `Node`
-   - **Build Command:** `npm install && npx prisma generate && npx prisma migrate deploy`
-   - **Start Command:** `node dist/index.js`
+   - **Build Command:**
+     ```bash
+     npm install && npx prisma generate && npx prisma migrate deploy && npm run prisma:seed && npm run build
+     ```
+   - **Start Command:**
+     ```bash
+     node dist/index.js
+     ```
 4. Add Environment Variables:
    - `DATABASE_URL`: Connection string from Neon PostgreSQL.
-   - `JWT_SECRET`: Random 32+ character secret string.
+   - `JWT_SECRET`: Random 32+ character string.
    - `NODE_ENV`: `production`
-   - `FRONTEND_URL`: Your Vercel frontend URL (e.g., `https://your-app.vercel.app`).
-5. Run the seed script once after first deploy:
-   - In Render Shell: `npm run prisma:seed`
+   - `FRONTEND_URL`: Your deployed Vercel URL (e.g. `https://your-app.vercel.app`).
 
-### Frontend Deployment (Vercel)
-1. Log in to [Vercel](https://vercel.com) and import the repository.
-2. Select `frontend` as the **Root Directory**.
-3. Framework Preset: **Next.js**.
-4. Configure Environment Variables:
-   - `NEXT_PUBLIC_API_URL`: Your deployed Render backend URL (e.g., `https://your-api.onrender.com/api`).
-5. Click **Deploy**.
-
+### Frontend Deployment on Vercel:
+1. Import your GitHub repository on [Vercel](https://vercel.com).
+2. Configure settings:
+   - **Root Directory:** `frontend` ⚠️ *(Crucial)*
+   - **Framework Preset:** `Next.js`
+3. Add Environment Variable:
+   - `NEXT_PUBLIC_API_URL`: Your Render backend URL ending in `/api` (e.g. `https://your-backend.onrender.com/api`).
+4. Click **Deploy**.
